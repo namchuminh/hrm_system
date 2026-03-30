@@ -97,7 +97,7 @@
                 </a>
 
                 <div class="px-6 py-4 text-xs font-bold text-indigo-100 uppercase tracking-widest bg-indigo-900/50">Công việc</div>
-                @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('HR') || Auth::user()->hasRole('Accountant') || Auth::user()->hasRole('Manager'))
+                @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('HR') || Auth::user()->hasRole('Accountant') || Auth::user()->hasRole('Manager') || Auth::user()->hasRole('Employee'))
                 <a href="{{ route('attendance.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('attendance.*') ? 'bg-indigo-800 text-white' : 'text-indigo-300' }} hover:bg-indigo-800 transition-colors">
                     <i class="fas fa-clock mr-3"></i> Điểm danh
                 </a>

@@ -72,6 +72,16 @@ class PayrollController extends Controller
             'basic_salary.required' => 'Vui lòng nhập lương cơ bản.',
         ]);
 
+        // Check for duplicates
+        $exists = Payroll::where('employee_id', $validated['employee_id'])
+            ->where('month', $validated['month'])
+            ->where('year', $validated['year'])
+            ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Nhân viên này đã có bảng lương cho tháng được chọn.')->withInput();
+        }
+
         $net_salary = $validated['basic_salary'] + $validated['allowance'] + ($validated['bonus'] ?? 0) - ($validated['deduction'] ?? 0);
         $validated['net_salary'] = $net_salary;
 
@@ -84,6 +94,44 @@ class PayrollController extends Controller
         }
 
         return redirect()->route('payroll.index')->with('success', 'Đã tạo phiếu lương mới!');
+    }
+
+    public function edit(Payroll $payroll)
+    {
+        $employees = Employee::all();
+        return view('payroll.edit', compact('payroll', 'employees'));
+    }
+
+    public function update(Request $request, Payroll $payroll)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'month' => 'required|integer|min:1|max:12',
+            'year' => 'required|integer|min:2000',
+            'basic_salary' => 'required|numeric',
+            'allowance' => 'required|numeric',
+            'bonus' => 'nullable|numeric',
+            'deduction' => 'nullable|numeric',
+            'status' => 'required|in:Đã thanh toán,Chưa thanh toán'
+        ]);
+
+        // Check for duplicates excluding current record
+        $exists = Payroll::where('employee_id', $validated['employee_id'])
+            ->where('month', $validated['month'])
+            ->where('year', $validated['year'])
+            ->where('id', '!=', $payroll->id)
+            ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Nhân viên này đã có bảng lương cho tháng được chọn.')->withInput();
+        }
+
+        $net_salary = $validated['basic_salary'] + $validated['allowance'] + ($validated['bonus'] ?? 0) - ($validated['deduction'] ?? 0);
+        $validated['net_salary'] = $net_salary;
+
+        $payroll->update($validated);
+
+        return redirect()->route('payroll.index')->with('success', 'Cập nhật phiếu lương thành công!');
     }
 
     public function show(Employee $employee)

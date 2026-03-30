@@ -110,9 +110,14 @@
                             <div class="text-sm font-black text-indigo-600">{{ number_format($pay->net_salary) }} <span class="text-[8px] opacity-60">VNĐ</span></div>
                             <div class="text-[10px] text-emerald-500 font-bold uppercase tracking-tight mt-0.5">Đã quyết toán <i class="fas fa-check-circle ml-1"></i></div>
                         </td>
-                        <td class="px-8 py-5 text-right">
+                        <td class="px-8 py-5 text-right flex justify-end space-x-2">
+                            @if($isManager)
+                            <a href="{{ route('payroll.edit', $pay->id) }}" class="p-2 text-slate-400 hover:text-amber-600 hover:bg-white rounded-lg transition-all" title="Sửa phiếu lương">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            @endif
                             <a href="{{ route('payroll.show', $pay->employee_id) }}" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-white rounded-lg transition-all" title="Xem chi tiết & In phiếu lương">
-                                <i class="fas fa-file-invoice-dollar mt-1"></i>
+                                <i class="fas fa-file-invoice-dollar"></i>
                             </a>
                         </td>
                     </tr>

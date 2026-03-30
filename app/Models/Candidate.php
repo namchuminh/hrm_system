@@ -9,7 +9,7 @@ class Candidate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['job_id', 'full_name', 'email', 'cv_path', 'status'];
+    protected $fillable = ['job_id', 'full_name', 'email', 'phone', 'experience', 'cv_path', 'status'];
 
     public function jobPosting()
     {

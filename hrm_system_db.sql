@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2026 at 11:26 AM
+-- Generation Time: Mar 30, 2026 at 07:56 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -61,7 +61,9 @@ CREATE TABLE `attendances` (
 INSERT INTO `attendances` (`id`, `employee_id`, `shift_id`, `date`, `check_in`, `check_out`, `ip_address`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, NULL, '2026-03-27', '2026-03-27 08:00:00', '2026-03-27 12:03:21', '127.0.0.1', 'P', '2026-03-27 04:35:58', '2026-03-27 05:03:21'),
 (2, 1, NULL, '2026-03-28', '2026-03-28 13:20:16', '2026-03-28 13:20:24', NULL, 'P', '2026-03-28 06:20:16', '2026-03-28 06:20:24'),
-(3, 2, NULL, '2026-03-28', '2026-03-28 13:23:05', '2026-03-28 13:23:07', NULL, 'P', '2026-03-28 06:23:05', '2026-03-28 06:23:07');
+(3, 2, NULL, '2026-03-28', '2026-03-28 13:23:05', '2026-03-28 13:23:07', NULL, 'P', '2026-03-28 06:23:05', '2026-03-28 06:23:07'),
+(4, 4, NULL, '2026-03-30', '2026-03-30 18:55:04', '2026-03-30 18:55:08', NULL, 'P', '2026-03-30 11:55:04', '2026-03-30 11:55:08'),
+(5, 3, NULL, '2026-03-30', '2026-03-30 18:56:36', '2026-03-30 18:56:45', NULL, 'P', '2026-03-30 11:56:36', '2026-03-30 11:56:45');
 
 -- --------------------------------------------------------
 
@@ -74,6 +76,8 @@ CREATE TABLE `candidates` (
   `job_id` bigint(20) UNSIGNED NOT NULL,
   `full_name` varchar(255) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `experience` text DEFAULT NULL,
   `cv_path` varchar(255) DEFAULT NULL,
   `status` enum('Phỏng vấn','Đạt','Loại') DEFAULT 'Phỏng vấn',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -84,9 +88,9 @@ CREATE TABLE `candidates` (
 -- Dumping data for table `candidates`
 --
 
-INSERT INTO `candidates` (`id`, `job_id`, `full_name`, `email`, `cv_path`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Trần Thị Ứng Viên', 'candidate1@gmail.com', NULL, 'Đạt', '2026-03-27 04:35:58', '2026-03-27 23:15:36'),
-(2, 1, 'Nguyễn Văn An', 'nguyenvana@gmail.com', NULL, 'Đạt', '2026-03-28 10:01:31', '2026-03-28 10:01:42');
+INSERT INTO `candidates` (`id`, `job_id`, `full_name`, `email`, `phone`, `experience`, `cv_path`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Trần Thị Ứng Viên', 'candidate1@gmail.com', NULL, NULL, NULL, 'Đạt', '2026-03-27 04:35:58', '2026-03-27 23:15:36'),
+(2, 1, 'Nguyễn Văn An', 'nguyenvana@gmail.com', NULL, NULL, NULL, 'Đạt', '2026-03-28 10:01:31', '2026-03-28 10:01:42');
 
 -- --------------------------------------------------------
 
@@ -285,8 +289,11 @@ CREATE TABLE `job_postings` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
+  `department_id` bigint(20) UNSIGNED DEFAULT NULL,
   `quantity` int(11) DEFAULT 1,
   `deadline` date DEFAULT NULL,
+  `experience_required` varchar(255) DEFAULT NULL,
+  `salary_range` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -295,8 +302,9 @@ CREATE TABLE `job_postings` (
 -- Dumping data for table `job_postings`
 --
 
-INSERT INTO `job_postings` (`id`, `title`, `description`, `quantity`, `deadline`, `created_at`, `updated_at`) VALUES
-(1, 'Lập trình viên Laravel Senior', 'Phát triển các hệ thống quản trị nội bộ.', 2, '2026-04-27', '2026-03-27 04:35:58', '2026-03-27 04:35:58');
+INSERT INTO `job_postings` (`id`, `title`, `description`, `department_id`, `quantity`, `deadline`, `experience_required`, `salary_range`, `created_at`, `updated_at`) VALUES
+(1, 'Lập trình viên Laravel Senior', 'Phát triển các hệ thống quản trị nội bộ.', 2, 2, '2026-04-27', NULL, NULL, '2026-03-27 04:35:58', '2026-03-30 11:39:08'),
+(2, 'Tuyển dụng lập trình viên Python', 'Tuyển dụng Python sử dụng Django và các kiến trúc AI', 2, 2, '2026-07-30', NULL, NULL, '2026-03-30 11:40:02', '2026-03-30 11:40:11');
 
 -- --------------------------------------------------------
 
@@ -323,7 +331,8 @@ CREATE TABLE `leave_requests` (
 
 INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type_id`, `start_date`, `end_date`, `reason`, `status`, `approved_by`, `created_at`, `updated_at`) VALUES
 (3, 4, 2, '2026-03-28', '2026-03-28', 'Nghỉ ốm', 'Từ chối', NULL, '2026-03-28 06:40:51', '2026-03-28 06:59:03'),
-(4, 4, 1, '2026-03-28', '2026-03-29', 'Nghỉ có việc riêng', 'Đồng ý', NULL, '2026-03-28 06:58:38', '2026-03-28 06:59:00');
+(4, 4, 1, '2026-03-28', '2026-03-29', 'Nghỉ có việc riêng', 'Đồng ý', NULL, '2026-03-28 06:58:38', '2026-03-28 06:59:00'),
+(5, 4, 2, '2026-03-30', '2026-03-30', 'ốm', 'Chờ duyệt', NULL, '2026-03-30 11:42:13', '2026-03-30 11:42:13');
 
 -- --------------------------------------------------------
 
@@ -370,7 +379,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (4, '2024_03_28_000001_expand_employee_and_contract_fields', 4),
 (5, '2024_03_28_000002_add_legal_fields_to_employees_table', 5),
 (6, '2026_03_28_162025_create_system_settings_table', 6),
-(7, '2026_03_28_163225_add_transcript_image_to_education_histories', 7);
+(7, '2026_03_28_163225_add_transcript_image_to_education_histories', 7),
+(8, '2026_03_30_000001_add_missing_fields_to_job_postings', 8),
+(9, '2026_03_30_000002_add_missing_fields_to_candidates', 9),
+(10, '2026_03_30_000003_rename_accountant_role', 10);
 
 -- --------------------------------------------------------
 
@@ -396,12 +408,17 @@ CREATE TABLE `notifications` (
 INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
 ('20de7637-7d30-4dfb-97a1-ab6891fcee27', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 2, '{\"type\":\"leave_request\",\"id\":3,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 28\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', NULL, '2026-03-28 06:40:51', '2026-03-28 06:40:51'),
 ('4f4aeeed-93aa-4c0f-82d4-30a62a7ab38f', 'App\\Notifications\\LeaveStatusUpdated', 'App\\Models\\User', 4, '{\"type\":\"leave_status\",\"id\":4,\"title\":\"\\u0110\\u01a1n ngh\\u1ec9 ph\\u00e9p c\\u1ee7a b\\u1ea1n \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c \\u0110\\u1ed3ng \\u00fd\",\"message\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 29\\/03\\/2026 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c c\\u1eadp nh\\u1eadt th\\u00e0nh: \\u0110\\u1ed3ng \\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests\"}', NULL, '2026-03-28 06:59:00', '2026-03-28 06:59:00'),
+('76ce3661-cd69-44df-8153-2e58854dca6a', 'App\\Notifications\\PayrollIssued', 'App\\Models\\User', 4, '{\"type\":\"payroll_issued\",\"id\":4,\"title\":\"B\\u1ea1n c\\u00f3 phi\\u1ebfu l\\u01b0\\u01a1ng m\\u1edbi\",\"message\":\"H\\u1ec7 th\\u1ed1ng \\u0111\\u00e3 ph\\u00e1t h\\u00e0nh phi\\u1ebfu l\\u01b0\\u01a1ng cho th\\u00e1ng 3\\/2026. S\\u1ed1 ti\\u1ec1n th\\u1ef1c nh\\u1eadn: 17,000,000 VN\\u0110.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/payroll\"}', NULL, '2026-03-30 11:58:21', '2026-03-30 11:58:21'),
 ('80c0ffba-ac0f-4d75-b084-e9e56550e95f', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 1, '{\"type\":\"leave_request\",\"id\":3,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 28\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', '2026-03-28 06:41:18', '2026-03-28 06:40:51', '2026-03-28 06:41:18'),
+('8b0a555d-064d-4b97-95c9-ef299cd2ebaf', 'App\\Notifications\\PayrollIssued', 'App\\Models\\User', 3, '{\"type\":\"payroll_issued\",\"id\":3,\"title\":\"B\\u1ea1n c\\u00f3 phi\\u1ebfu l\\u01b0\\u01a1ng m\\u1edbi\",\"message\":\"H\\u1ec7 th\\u1ed1ng \\u0111\\u00e3 ph\\u00e1t h\\u00e0nh phi\\u1ebfu l\\u01b0\\u01a1ng cho th\\u00e1ng 3\\/2026. S\\u1ed1 ti\\u1ec1n th\\u1ef1c nh\\u1eadn: 30,000,000 VN\\u0110.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/payroll\"}', NULL, '2026-03-30 11:57:58', '2026-03-30 11:57:58'),
 ('9c464174-5ee3-4c8e-8f1d-8fe49560b591', 'App\\Notifications\\LeaveStatusUpdated', 'App\\Models\\User', 4, '{\"type\":\"leave_status\",\"id\":3,\"title\":\"\\u0110\\u01a1n ngh\\u1ec9 ph\\u00e9p c\\u1ee7a b\\u1ea1n \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c T\\u1eeb ch\\u1ed1i\",\"message\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 28\\/03\\/2026 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c c\\u1eadp nh\\u1eadt th\\u00e0nh: T\\u1eeb ch\\u1ed1i.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests\"}', NULL, '2026-03-28 06:59:03', '2026-03-28 06:59:03'),
 ('ac28c4a8-88bc-429e-beb5-49ea69342b6a', 'App\\Notifications\\CandidateStatusUpdated', 'App\\Models\\User', 1, '{\"title\":\"C\\u1eadp nh\\u1eadt tr\\u1ea1ng th\\u00e1i \\u1ee9ng vi\\u00ean\",\"message\":\"\\u1ee8ng vi\\u00ean Tr\\u1ea7n Th\\u1ecb \\u1ee8ng Vi\\u00ean \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c chuy\\u1ec3n sang tr\\u1ea1ng th\\u00e1i: \\u0110\\u1ea1t\"}', '2026-03-27 23:15:49', '2026-03-27 23:15:36', '2026-03-27 23:15:49'),
 ('b189b067-7536-49e4-a604-ae5991137957', 'App\\Notifications\\CandidateStatusUpdated', 'App\\Models\\User', 1, '{\"title\":\"C\\u1eadp nh\\u1eadt tr\\u1ea1ng th\\u00e1i \\u1ee9ng vi\\u00ean\",\"message\":\"\\u1ee8ng vi\\u00ean Tr\\u1ea7n Th\\u1ecb \\u1ee8ng Vi\\u00ean \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c chuy\\u1ec3n sang tr\\u1ea1ng th\\u00e1i: Ph\\u1ecfng v\\u1ea5n\"}', '2026-03-27 23:15:47', '2026-03-27 07:21:34', '2026-03-27 23:15:47'),
+('cea6c6be-e7fd-403c-9ad2-ea4d776e9d7d', 'App\\Notifications\\PayrollIssued', 'App\\Models\\User', 4, '{\"type\":\"payroll_issued\",\"id\":2,\"title\":\"B\\u1ea1n c\\u00f3 phi\\u1ebfu l\\u01b0\\u01a1ng m\\u1edbi\",\"message\":\"H\\u1ec7 th\\u1ed1ng \\u0111\\u00e3 ph\\u00e1t h\\u00e0nh phi\\u1ebfu l\\u01b0\\u01a1ng cho th\\u00e1ng 3\\/2026. S\\u1ed1 ti\\u1ec1n th\\u1ef1c nh\\u1eadn: 17,000,000 VN\\u0110.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/payroll\"}', NULL, '2026-03-30 11:57:10', '2026-03-30 11:57:10'),
+('ea2562e6-f7cd-48dc-a944-7e3055d0b267', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 1, '{\"type\":\"leave_request\",\"id\":5,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 30\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 30\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', NULL, '2026-03-30 11:42:14', '2026-03-30 11:42:14'),
 ('eae1b3dc-6014-49b9-80f2-3178dc58aa97', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 2, '{\"type\":\"leave_request\",\"id\":4,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 29\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', NULL, '2026-03-28 06:58:38', '2026-03-28 06:58:38'),
-('ecd890b4-ed8c-468e-ba1f-376035b0704c', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 1, '{\"type\":\"leave_request\",\"id\":4,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 29\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', '2026-03-28 10:20:19', '2026-03-28 06:58:38', '2026-03-28 10:20:19');
+('ecd890b4-ed8c-468e-ba1f-376035b0704c', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 1, '{\"type\":\"leave_request\",\"id\":4,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 28\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 29\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', '2026-03-28 10:20:19', '2026-03-28 06:58:38', '2026-03-28 10:20:19'),
+('f8633cd5-83f2-4fbd-9c1f-ce002bfe14db', 'App\\Notifications\\LeaveRequestCreated', 'App\\Models\\User', 2, '{\"type\":\"leave_request\",\"id\":5,\"title\":\"Y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p m\\u1edbi\",\"message\":\"Nh\\u00e2n vi\\u00ean Nh\\u00e2n vi\\u00ean m\\u1eabu \\u0111\\u00e3 t\\u1ea1o y\\u00eau c\\u1ea7u ngh\\u1ec9 ph\\u00e9p t\\u1eeb ng\\u00e0y 30\\/03\\/2026 \\u0111\\u1ebfn ng\\u00e0y 30\\/03\\/2026.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/leave-requests?status=Ch%E1%BB%9D%20duy%E1%BB%87t\"}', NULL, '2026-03-30 11:42:14', '2026-03-30 11:42:14');
 
 -- --------------------------------------------------------
 
@@ -427,7 +444,10 @@ CREATE TABLE `payrolls` (
 --
 
 INSERT INTO `payrolls` (`id`, `employee_id`, `month`, `year`, `total_working_days`, `total_salary`, `net_salary`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 3, 2026, 0, 0.00, 11000000.00, 'Chưa thanh toán', '2026-03-27 06:07:04', '2026-03-27 06:07:04');
+(1, 1, 3, 2026, 0, 0.00, 11000000.00, 'Chưa thanh toán', '2026-03-27 06:07:04', '2026-03-27 06:07:04'),
+(2, 4, 3, 2026, 0, 0.00, 17000000.00, 'Chưa thanh toán', '2026-03-30 11:57:10', '2026-03-30 11:57:10'),
+(3, 3, 3, 2026, 0, 0.00, 30000000.00, 'Chưa thanh toán', '2026-03-30 11:57:58', '2026-03-30 11:57:58'),
+(4, 4, 3, 2026, 0, 0.00, 17000000.00, 'Chưa thanh toán', '2026-03-30 11:58:21', '2026-03-30 11:58:21');
 
 -- --------------------------------------------------------
 
@@ -507,7 +527,7 @@ INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (2, 'Manager', '2026-03-27 04:33:29', '2026-03-27 04:33:29'),
 (3, 'Employee', '2026-03-27 04:33:29', '2026-03-27 04:33:29'),
 (4, 'HR', '2026-03-27 05:28:42', '2026-03-27 05:28:42'),
-(5, 'Kế toán', '2026-03-27 05:28:42', '2026-03-27 05:28:42');
+(5, 'Accountant', '2026-03-27 05:28:42', '2026-03-27 05:28:42');
 
 -- --------------------------------------------------------
 
@@ -888,7 +908,7 @@ ALTER TABLE `allowances`
 -- AUTO_INCREMENT for table `attendances`
 --
 ALTER TABLE `attendances`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `candidates`
@@ -936,13 +956,13 @@ ALTER TABLE `holidays`
 -- AUTO_INCREMENT for table `job_postings`
 --
 ALTER TABLE `job_postings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
@@ -954,13 +974,13 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payrolls`
 --
 ALTER TABLE `payrolls`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `permissions`
