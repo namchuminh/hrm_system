@@ -34,12 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Admin'])->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::resource('departments', DepartmentController::class);
+        Route::resource('positions', PositionController::class);
     });
 
     // --- Admin & HR Only ---
     Route::middleware(['role:Admin,HR'])->group(function () {
-        Route::resource('departments', DepartmentController::class);
-        Route::resource('positions', PositionController::class);
         Route::resource('employees', EmployeeController::class)->except(['index', 'show']);
     });
 

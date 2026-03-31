@@ -9,10 +9,12 @@
             <h1 class="text-3xl font-black text-slate-900 tracking-tight text-indigo-900">Danh mục Đào tạo</h1>
             <p class="text-slate-500 font-medium">Nâng cao năng lực chuyên môn và kỹ năng thực hành.</p>
         </div>
+        @if($isManager)
         <button onclick="document.getElementById('addCourseModal').classList.remove('hidden')" 
             class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-extrabold shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center">
             <i class="fas fa-plus-circle mr-2"></i> THÊM KHÓA ĐÀO TẠO
         </button>
+        @endif
     </div>
 
     <!-- Search Card -->
@@ -44,6 +46,7 @@
                         <div class="p-3 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
                             <i class="fas fa-graduation-cap text-xl"></i>
                         </div>
+                        @if($isManager)
                         <div class="flex space-x-1 opacity-100 transition-opacity">
                             <button onclick="editCourse({{ json_encode($course) }})" class="p-2 text-slate-400 hover:text-indigo-600 transition-all"><i class="fas fa-edit"></i></button>
                             <form action="{{ route('training-courses.destroy', $course) }}" method="POST" onsubmit="return confirm('Xác nhận xóa khóa học này?')">
@@ -51,6 +54,7 @@
                                 <button type="submit" class="p-2 text-slate-400 hover:text-rose-600 transition-all"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </div>
+                        @endif
                     </div>
                     <div>
                         <h3 class="text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-tight">{{ $course->name }}</h3>

@@ -77,7 +77,7 @@
                 </a>
                 @endif
 
-                @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('HR'))
+                @if(Auth::user()->hasRole('Admin'))
                 <a href="{{ route('departments.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('departments.*') ? 'bg-indigo-800 text-white' : 'text-indigo-300' }} hover:bg-indigo-800 transition-colors">
                     <i class="fas fa-building mr-3"></i> Phòng ban
                 </a>

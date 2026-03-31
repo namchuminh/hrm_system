@@ -99,14 +99,40 @@ class AttendanceController extends Controller
                             ->where('date', $today)
                             ->exists();
 
+        $ua = $request->userAgent();
+        $isChrome = str_contains($ua, 'Chrome/') && !str_contains($ua, 'Edg/') && !str_contains($ua, 'OPR/') && !str_contains($ua, 'Chromium/') && !str_contains($ua, 'Vivaldi/');
+        
+        if (!$isChrome) {
+            return back()->with('error', 'Hệ thống chỉ chấp nhận điểm danh trên trình duyệt Google Chrome chính thức để bảo mật.');
+        }
+
         if ($exists) {
             return back()->with('error', 'Bạn đã điểm danh hôm nay rồi.');
+        }
+
+        $fingerprint = $request->input('device_id');
+        $ip = $request->ip();
+        
+        // Logical Machine ID: Combine IP and Hardware signals
+        // This remains consistent across Chrome profiles and Incognito mode on the same OS/Hardware.
+        $machineId = $fingerprint ? md5($ip . '|' . $fingerprint) : null;
+
+        if ($machineId) {
+            $machineUsedByOther = Attendance::where('date', $today)
+                                            ->where('device_id', $machineId)
+                                            ->where('employee_id', '!=', $employee->id)
+                                            ->exists();
+            if ($machineUsedByOther) {
+                return back()->with('error', 'Thiết bị này đã được sử dụng để điểm danh cho một nhân viên khác hôm nay!');
+            }
         }
 
         Attendance::create([
             'employee_id' => $employee->id,
             'date' => $today,
             'check_in' => Carbon::now(),
+            'device_id' => $machineId,
+            'ip_address' => $ip,
             'status' => 'P'
         ]);
 
@@ -126,12 +152,34 @@ class AttendanceController extends Controller
                                 ->whereNull('check_out')
                                 ->first();
 
+        $ua = $request->userAgent();
+        $isChrome = str_contains($ua, 'Chrome/') && !str_contains($ua, 'Edg/') && !str_contains($ua, 'OPR/') && !str_contains($ua, 'Chromium/') && !str_contains($ua, 'Vivaldi/');
+        
+        if (!$isChrome) {
+            return back()->with('error', 'Hệ thống chỉ chấp nhận điểm danh trên trình duyệt Google Chrome chính thức để bảo mật.');
+        }
+
         if (!$attendance) {
             return back()->with('error', 'Bạn chưa điểm danh vào hoặc đã điểm danh ra rồi.');
         }
 
+        $fingerprint = $request->input('device_id');
+        $ip = $request->ip();
+        $machineId = $fingerprint ? md5($ip . '|' . $fingerprint) : null;
+
+        if ($machineId) {
+            $machineUsedByOther = Attendance::where('date', $today)
+                                            ->where('device_id', $machineId)
+                                            ->where('employee_id', '!=', $employee->id)
+                                            ->exists();
+            if ($machineUsedByOther) {
+                return back()->with('error', 'Thiết bị này đã được sử dụng để điểm danh cho một nhân viên khác hôm nay!');
+            }
+        }
+
         $attendance->update([
-            'check_out' => Carbon::now()
+            'check_out' => Carbon::now(),
+            'device_id' => $machineId ?: $attendance->device_id
         ]);
 
         return back()->with('success', 'Điểm danh ra về thành công!');

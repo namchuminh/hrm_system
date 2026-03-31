@@ -11,14 +11,16 @@
         </div>
         <div class="flex space-x-3">
              @if(Auth::user()->employee)
-                 <form action="{{ route('attendance.checkin') }}" method="POST">
+                 <form action="{{ route('attendance.checkin') }}" method="POST" class="attendance-form">
                     @csrf
+                    <input type="hidden" name="device_id" class="device-id-field">
                     <button type="submit" class="px-6 py-3 bg-emerald-600 text-white font-extrabold rounded-2xl shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-all flex items-center">
                         <i class="fas fa-sign-in-alt mr-2"></i> CHECK-IN
                     </button>
                 </form>
-                <form action="{{ route('attendance.checkout') }}" method="POST">
+                <form action="{{ route('attendance.checkout') }}" method="POST" class="attendance-form">
                     @csrf
+                    <input type="hidden" name="device_id" class="device-id-field">
                     <button type="submit" class="px-6 py-3 bg-rose-600 text-white font-extrabold rounded-2xl shadow-lg shadow-rose-600/20 hover:bg-rose-700 transition-all flex items-center">
                         <i class="fas fa-sign-out-alt mr-2"></i> CHECK-OUT
                     </button>
@@ -211,4 +213,38 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function generateFingerprint() {
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const colorDepth = window.screen.colorDepth;
+        const pixelRatio = window.devicePixelRatio;
+        const cores = navigator.hardwareConcurrency || 'unknown';
+        const platform = navigator.platform;
+        
+        // Combine hardware signals into a semi-unique string
+        // This remains the same across different Chrome profiles on one machine
+        return `hw-${screenWidth}x${screenHeight}-${colorDepth}-${pixelRatio}-${cores}-${platform}`;
+    }
+
+    const fingerprint = generateFingerprint();
+
+    // Inject fingerprint into all attendance forms
+    const forms = document.querySelectorAll('.attendance-form');
+    forms.forEach(form => {
+        let field = form.querySelector('.device-id-field');
+        if (field) {
+            field.value = fingerprint;
+        }
+
+        form.addEventListener('submit', function(e) {
+            if (field) {
+                field.value = fingerprint; 
+            }
+        });
+    });
+});
+</script>
 @endsection

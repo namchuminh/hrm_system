@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2026 at 07:56 PM
+-- Generation Time: Mar 31, 2026 at 02:14 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -49,6 +49,7 @@ CREATE TABLE `attendances` (
   `check_in` datetime DEFAULT NULL,
   `check_out` datetime DEFAULT NULL,
   `ip_address` varchar(45) DEFAULT NULL,
+  `device_id` varchar(255) DEFAULT NULL,
   `status` enum('P','V','M') DEFAULT 'P',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -58,12 +59,12 @@ CREATE TABLE `attendances` (
 -- Dumping data for table `attendances`
 --
 
-INSERT INTO `attendances` (`id`, `employee_id`, `shift_id`, `date`, `check_in`, `check_out`, `ip_address`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, '2026-03-27', '2026-03-27 08:00:00', '2026-03-27 12:03:21', '127.0.0.1', 'P', '2026-03-27 04:35:58', '2026-03-27 05:03:21'),
-(2, 1, NULL, '2026-03-28', '2026-03-28 13:20:16', '2026-03-28 13:20:24', NULL, 'P', '2026-03-28 06:20:16', '2026-03-28 06:20:24'),
-(3, 2, NULL, '2026-03-28', '2026-03-28 13:23:05', '2026-03-28 13:23:07', NULL, 'P', '2026-03-28 06:23:05', '2026-03-28 06:23:07'),
-(4, 4, NULL, '2026-03-30', '2026-03-30 18:55:04', '2026-03-30 18:55:08', NULL, 'P', '2026-03-30 11:55:04', '2026-03-30 11:55:08'),
-(5, 3, NULL, '2026-03-30', '2026-03-30 18:56:36', '2026-03-30 18:56:45', NULL, 'P', '2026-03-30 11:56:36', '2026-03-30 11:56:45');
+INSERT INTO `attendances` (`id`, `employee_id`, `shift_id`, `date`, `check_in`, `check_out`, `ip_address`, `device_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, '2026-03-27', '2026-03-27 08:00:00', '2026-03-27 12:03:21', '127.0.0.1', NULL, 'P', '2026-03-27 04:35:58', '2026-03-27 05:03:21'),
+(2, 1, NULL, '2026-03-28', '2026-03-28 13:20:16', '2026-03-28 13:20:24', NULL, NULL, 'P', '2026-03-28 06:20:16', '2026-03-28 06:20:24'),
+(3, 2, NULL, '2026-03-28', '2026-03-28 13:23:05', '2026-03-28 13:23:07', NULL, NULL, 'P', '2026-03-28 06:23:05', '2026-03-28 06:23:07'),
+(4, 4, NULL, '2026-03-30', '2026-03-30 18:55:04', '2026-03-30 18:55:08', NULL, NULL, 'P', '2026-03-30 11:55:04', '2026-03-30 11:55:08'),
+(12, 1, NULL, '2026-03-31', '2026-03-31 19:13:42', '2026-03-31 19:13:44', '127.0.0.1', '76303f35f6302562b350c7ca1e0fa828', 'P', '2026-03-31 12:13:42', '2026-03-31 12:13:44');
 
 -- --------------------------------------------------------
 
@@ -382,7 +383,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2026_03_28_163225_add_transcript_image_to_education_histories', 7),
 (8, '2026_03_30_000001_add_missing_fields_to_job_postings', 8),
 (9, '2026_03_30_000002_add_missing_fields_to_candidates', 9),
-(10, '2026_03_30_000003_rename_accountant_role', 10);
+(10, '2026_03_30_000003_rename_accountant_role', 10),
+(11, '2026_03_31_182524_add_device_id_to_attendances_table', 11);
 
 -- --------------------------------------------------------
 
@@ -651,7 +653,7 @@ CREATE TABLE `system_settings` (
 INSERT INTO `system_settings` (`id`, `key`, `value`, `created_at`, `updated_at`) VALUES
 (1, 'company_name', 'CÔNG TY TNHH PHÁT TRIỂN CÔNG NGHỆ HRM PRO', '2026-03-28 09:21:37', '2026-03-28 09:21:37'),
 (2, 'director_name', 'VŨ ĐỨC LONG', '2026-03-28 09:21:37', '2026-03-28 09:21:37'),
-(3, 'company_address', 'Khu đô thị mới Cầu Giấy, Quận Cầu Giấy, TP. Hà Nội1', '2026-03-28 09:21:37', '2026-03-28 09:39:47'),
+(3, 'company_address', 'Khu đô thị mới Cầu Giấy, Quận Cầu Giấy, TP. Hà Nội', '2026-03-28 09:21:37', '2026-03-31 06:53:05'),
 (4, 'company_phone', '024.399.8888', '2026-03-28 09:21:37', '2026-03-28 09:21:37'),
 (5, 'company_email', 'contact@hrmpro.com', '2026-03-28 09:21:37', '2026-03-28 09:21:37'),
 (6, 'default_working_time', '08 giờ/ngày (48 giờ/tuần)', '2026-03-28 09:21:37', '2026-03-28 09:21:37');
@@ -908,7 +910,7 @@ ALTER TABLE `allowances`
 -- AUTO_INCREMENT for table `attendances`
 --
 ALTER TABLE `attendances`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `candidates`
@@ -974,7 +976,7 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `payrolls`

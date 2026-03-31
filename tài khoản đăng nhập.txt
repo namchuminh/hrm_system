@@ -1,0 +1,8 @@
+admin@hrm.com
+hr@hrm.com
+accountant@hrm.com
+employee@hrm.com
+
+==============
+
+admin
